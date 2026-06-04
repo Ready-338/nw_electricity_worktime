@@ -199,7 +199,7 @@
 
     @page {
         size: A4 landscape;
-        margin: 10mm 10mm 8mm 10mm;
+        margin: 10mm 10mm 8mm 14mm;
     }
 
     @media print {
@@ -222,7 +222,8 @@
             max-width: none;
             width: 100%;
             margin: 0;
-            padding: 0;
+            padding: 0 3mm 0 3mm;
+            box-sizing: border-box;
         }
 
         .print-area {
@@ -232,6 +233,7 @@
             padding: 0;
             margin: 10mm 0 0 0;
             page-break-inside: avoid;
+            box-sizing: border-box;
         }
 
         .week-header {
@@ -255,10 +257,12 @@
         }
 
         table {
-            width: 100%;
+            width: 99%;
             table-layout: fixed;
             font-size: 10.5px;
             margin-top: 0;
+            margin-left: auto;
+            margin-right: auto;
             page-break-inside: avoid;
         }
 
