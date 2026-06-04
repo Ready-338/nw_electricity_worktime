@@ -120,7 +120,7 @@
     }
 
     .night-shift {
-        background: #dbeafe;
+        background: #e8eef7;
     }
 
     .today-col {
@@ -195,45 +195,105 @@
         border-bottom: 1px solid #ddd;
     }
 
-    @media print {
-        header,
-        .print-button,
-        .notice {
-            display: none;
-        }
+    @page {
+        size: A4 landscape;
+        margin: 8mm;
+    }
 
+    @media print {
         body {
             background: white;
+            margin: 0;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
         }
 
-        .section {
-            display: none;
+        body * {
+            visibility: hidden;
         }
 
-        .section.active {
-            display: block;
+        .print-area,
+        .print-area * {
+            visibility: visible;
         }
 
-        .card {
+        .print-area {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
             box-shadow: none;
             border: none;
             padding: 0;
+            margin: 0;
+        }
+
+        .print-button,
+        .notice {
+            display: none !important;
+        }
+
+        .week-header {
+            margin-bottom: 4px;
+        }
+
+        .week-header h2 {
+            font-size: 18px;
+            margin: 0 0 4px 0;
+        }
+
+        .date-title {
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .table-wrap {
+            overflow: visible;
         }
 
         table {
-            font-size: 12px;
+            width: 100%;
+            table-layout: fixed;
+            font-size: 11px;
+            margin-top: 0;
+            page-break-inside: avoid;
         }
 
-        th, td {
-            padding: 6px;
+        th {
+            padding: 4px 2px;
+            font-size: 10.5px;
+        }
+
+        td {
+            padding: 4px 2px;
+            min-width: 0;
         }
 
         .week-day-cell {
-            height: 95px;
+            height: 66px;
         }
 
         .week-holiday-cell {
-            height: 285px;
+            height: 198px;
+        }
+
+        .holiday-half {
+            padding: 4px 2px;
+        }
+
+        .group-title {
+            font-size: 12px;
+            margin-bottom: 2px;
+        }
+
+        .time {
+            font-size: 10.5px;
+            margin-bottom: 3px;
+        }
+
+        .names {
+            font-size: 11px;
+            line-height: 1.35;
         }
     }
 
@@ -258,14 +318,13 @@
 
 <header>
     <h1>⚡ 전기파트 근무표</h1>
-    <div>자동 순환 근무표</div>
 </header>
 
 
 <div class="container">
 
     <section id="week" class="section active">
-        <div class="card">
+        <div class="card print-area">
             <div class="week-header">
                 <h2>이번주 근무표</h2>
                 <button class="print-button" onclick="window.print()">출력</button>
@@ -302,6 +361,7 @@ const baseGroups = {
     3: ["노재덕", "박종필", "이경민"]
 };
 
+let currentMonthDate = new Date();
 
 function getWeekStartTuesday(date) {
     const d = new Date(date);
@@ -467,6 +527,87 @@ function renderWeek() {
     }
 
     document.getElementById("weekTable").innerHTML = html;
+}
+
+function renderMonthDayBlock(date) {
+    const day = date.getDay();
+
+    let html = `
+        <tr>
+            <th colspan="3">${formatDate(date)}</th>
+        </tr>
+    `;
+
+    if (day >= 2 && day <= 5) {
+        html += `
+            <tr>
+                ${renderWeekdayCell(date, 1, 0, 1)}
+                ${renderWeekdayCell(date, 2, 0, 1)}
+                ${renderWeekdayCell(date, 3, 0, 1)}
+            </tr>
+        `;
+    } else {
+        html += `
+            <tr>
+                <td colspan="3" class="day-shift${isToday(date) ? " today-col today-top" : ""}">
+                    ${renderHolidayContent(date, "day")}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" class="night-shift${isToday(date) ? " today-col today-bottom" : ""}">
+                    ${renderHolidayContent(date, "night")}
+                </td>
+            </tr>
+        `;
+    }
+
+    return html;
+}
+
+function renderHolidayContent(date, shiftType) {
+    const work = getHolidayShift(date, shiftType);
+
+    return `
+        <div class="group-title">${work.label}</div>
+        <div class="time">${work.time}</div>
+        <div class="names">${work.names.join("<br>")}</div>
+    `;
+}
+
+function renderMonth() {
+    const year = currentMonthDate.getFullYear();
+    const month = currentMonthDate.getMonth();
+
+    document.getElementById("monthTitle").innerText =
+        `${year}년 ${month + 1}월`;
+
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+
+    let html = "";
+
+    for (let d = new Date(firstDay); d <= lastDay; d.setDate(d.getDate() + 1)) {
+        const date = new Date(d);
+        html += renderMonthDayBlock(date);
+    }
+
+    document.getElementById("monthTable").innerHTML = html;
+}
+
+function changeMonth(offset) {
+    currentMonthDate.setMonth(currentMonthDate.getMonth() + offset);
+    renderMonth();
+}
+
+function showSection(id) {
+    document.querySelectorAll(".section").forEach(sec => {
+        sec.classList.remove("active");
+    });
+
+    document.getElementById(id).classList.add("active");
+
+    if (id === "week") renderWeek();
+    if (id === "month") renderMonth();
 }
 
 renderWeek();
