@@ -239,6 +239,26 @@
             overflow-x: auto;
         }
     }
+
+    .week-holiday-cell {
+    padding: 0;
+    height: 100%;
+}
+
+.holiday-half {
+    min-height: 110px;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.holiday-half:first-child {
+    border-bottom: 1px solid #ddd;
+}
+
+    
 </style>
 </head>
 
@@ -480,6 +500,46 @@ function renderHolidayCell(date, shiftType, rowIndex, totalRows) {
     `;
 }
 
+function renderHolidayCell(date, shiftType, rowIndex, totalRows) {
+    const work = getHolidayShift(date, shiftType);
+    const cssClass = shiftType === "day" ? "day-shift" : "night-shift";
+
+    return `
+        <td class="${cssClass}${getTodayClass(date, rowIndex, totalRows)}">
+            <div class="group-title">${work.label}</div>
+            <div class="time">${work.time}</div>
+            <div class="names">${work.names.join("<br>")}</div>
+        </td>
+    `;
+}
+
+/* 여기에 새 함수 추가 */
+function renderHolidayCombinedCell(date, totalRows) {
+    const dayWork = getHolidayShift(date, "day");
+    const nightWork = getHolidayShift(date, "night");
+
+    const todayClass = isToday(date)
+        ? " today-col today-top today-bottom"
+        : "";
+
+    return `
+        <td rowspan="${totalRows}" class="week-holiday-cell${todayClass}">
+            <div class="holiday-half day-shift">
+                <div class="group-title">${dayWork.label}</div>
+                <div class="time">${dayWork.time}</div>
+                <div class="names">${dayWork.names.join("<br>")}</div>
+            </div>
+
+            <div class="holiday-half night-shift">
+                <div class="group-title">${nightWork.label}</div>
+                <div class="time">${nightWork.time}</div>
+                <div class="names">${nightWork.names.join("<br>")}</div>
+            </div>
+        </td>
+    `;
+}
+    
+
 function renderWeek() {
     const today = new Date();
     const start = getWeekStartTuesday(today);
@@ -514,20 +574,15 @@ function renderWeek() {
                 html += renderWeekdayCell(d, row + 1, row, totalRows);
             }
 
-            // 토~월 : 주간 / 야간 2행만 표시, 3번째 행은 비움
-            else {
-                if (row === 0) {
-                    html += renderHolidayCell(d, "day", row, totalRows);
-                } else if (row === 1) {
-                    html += renderHolidayCell(d, "night", row, totalRows);
-                } else {
-                    html += `
-                        <td class="blank${getTodayClass(d, row, totalRows)}">
-                            -
-                        </td>
-                    `;
-                }
-            }
+            // 토~월 : 주간 / 야간을 한 칸 안에서 50:50으로 표시
+else {
+    if (row === 0) {
+        html += renderHolidayCombinedCell(d, totalRows);
+    } else {
+        // 위에서 rowspan으로 합쳤기 때문에 나머지 행은 만들지 않음
+    }
+}
+            
         }
 
         html += "</tr>";
