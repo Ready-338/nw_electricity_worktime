@@ -173,12 +173,22 @@
         cursor: pointer;
     }
 
-    .notice {
-        background: #fff3cd;
-        border-left: 5px solid #ffc107;
-        padding: 12px;
-        margin-top: 15px;
-    }
+.notice {
+    padding: 12px;
+    margin-top: 15px;
+    border-radius: 6px;
+    line-height: 1.7;
+}
+
+.red-notice {
+    background: #ffebee;
+    border-left: 5px solid #e53935;
+}
+
+.yellow-notice {
+    background: #fff3cd;
+    border-left: 5px solid #ffc107;
+}
 
     @media print {
         header,
@@ -255,11 +265,17 @@
                 <table id="weekTable"></table>
             </div>
 
-            <div class="notice">
-                ※ 근무조는 매주 화요일 기준으로 자동 변경됩니다.<br>
-                순환 방식 : 1근조 → 3근조 → 2근조 → 1근조<br>
-                ※ 토요일~월요일 휴일 근무는 주간/야간 기준으로 표시됩니다.
+            <div class="notice red-notice">
+            ※ 해당 사이트는 자동입니다.<br>
+            &nbsp;&nbsp;- 명절 및 휴가기간 근무 편성은 별도로 운영됩니다.<br>
+            &nbsp;&nbsp;- 개인 연차, 경조는 해당 표에 반영되지 않습니다.
             </div>
+
+            <div class="notice yellow-notice">
+            ※ 근무조는 매주 화요일 기준으로 자동 변경됩니다.<br>
+            순환 방식 : 1근조 → 3근조 → 2근조 → 1근조
+            </div>
+            
         </div>
     </section>
 
