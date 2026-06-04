@@ -500,19 +500,6 @@ function renderHolidayCell(date, shiftType, rowIndex, totalRows) {
     `;
 }
 
-function renderHolidayCell(date, shiftType, rowIndex, totalRows) {
-    const work = getHolidayShift(date, shiftType);
-    const cssClass = shiftType === "day" ? "day-shift" : "night-shift";
-
-    return `
-        <td class="${cssClass}${getTodayClass(date, rowIndex, totalRows)}">
-            <div class="group-title">${work.label}</div>
-            <div class="time">${work.time}</div>
-            <div class="names">${work.names.join("<br>")}</div>
-        </td>
-    `;
-}
-
 /* 여기에 새 함수 추가 */
 function renderHolidayCombinedCell(date, totalRows) {
     const dayWork = getHolidayShift(date, "day");
