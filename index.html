@@ -127,16 +127,16 @@
     }
 
     .today-col {
-        border-left: 2px solid #81c784 !important;
-        border-right: 2px solid #81c784 !important;
+        border-left: 3px solid #81c784 !important;
+        border-right: 3px solid #81c784 !important;
     }
 
     .today-top {
-        border-top: 2px solid #81c784 !important;
+        border-top: 3px solid #81c784 !important;
     }
 
     .today-bottom {
-        border-bottom: 2px solid #81c784 !important;
+        border-bottom: 3px solid #81c784 !important;
     }
 
     .group-title {
@@ -457,7 +457,7 @@ function renderHolidayCell(date, shiftType, rowIndex, totalRows) {
 
     return `
         <td class="${cssClass}${getTodayClass(date, rowIndex, totalRows)}">
-            <div class="group-title">${work.label} / ${work.group}</div>
+            <div class="group-title">${work.label}</div>
             <div class="time">${work.time}</div>
             <div class="names">${work.names.join("<br>")}</div>
         </td>
