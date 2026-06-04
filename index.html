@@ -76,13 +76,6 @@
         background: #0d47a1;
     }
 
-    .test-button {
-        background: #455a64;
-    }
-
-    .test-button:hover {
-        background: #263238;
-    }
 
     .date-title {
         font-weight: bold;
@@ -90,16 +83,6 @@
         color: #555;
     }
 
-    .test-notice {
-        display: none;
-        margin-bottom: 12px;
-        padding: 10px 12px;
-        border-radius: 8px;
-        background: #e3f2fd;
-        border-left: 5px solid #1976d2;
-        color: #0d47a1;
-        font-weight: bold;
-    }
 
     table {
         width: 100%;
@@ -216,56 +199,55 @@
 
     @page {
         size: A4 landscape;
-        margin: 14mm 8mm 8mm 8mm;
+        margin: 10mm 10mm 8mm 10mm;
     }
 
     @media print {
+        html,
         body {
             background: white;
             margin: 0;
+            padding: 0;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
         }
 
-        body * {
-            visibility: hidden;
+        header,
+        .button-area,
+        .notice {
+            display: none !important;
         }
 
-        .print-area,
-        .print-area * {
-            visibility: visible;
+        .container {
+            max-width: none;
+            width: 100%;
+            margin: 0;
+            padding: 0;
         }
 
         .print-area {
-            position: absolute;
-            left: 0;
-            top: 0;
             width: 100%;
             box-shadow: none;
             border: none;
             padding: 0;
-            margin: 0;
-        }
-
-        header,
-        .button-area,
-        .notice,
-        .test-notice {
-            display: none !important;
+            margin: 10mm 0 0 0;
+            page-break-inside: avoid;
         }
 
         .week-header {
-            margin-bottom: 4px;
+            margin-bottom: 5px;
         }
 
         .week-header h2 {
-            font-size: 18px;
-            margin: 0 0 4px 0;
+            font-size: 17px;
+            margin: 0 0 5px 0;
+            line-height: 1.2;
         }
 
         .date-title {
             font-size: 12px;
-            margin-bottom: 6px;
+            margin-bottom: 7px;
+            line-height: 1.2;
         }
 
         .table-wrap {
@@ -275,46 +257,49 @@
         table {
             width: 100%;
             table-layout: fixed;
-            font-size: 11px;
+            font-size: 10.5px;
             margin-top: 0;
             page-break-inside: avoid;
         }
 
         th {
-            padding: 5px 3px;
+            padding: 4px 3px;
             font-size: 10px;
+            line-height: 1.2;
         }
 
         td {
-            padding: 5px 3px;
+            padding: 4px 3px;
             min-width: 0;
         }
 
         .week-day-cell {
-            height: 82px;
+            height: 76px;
         }
 
         .week-holiday-cell {
-            height: 246px;
+            height: 228px;
         }
 
         .holiday-half {
-            padding: 5px 3px;
+            padding: 4px 3px;
         }
 
         .group-title {
             font-size: 12px;
             margin-bottom: 2px;
+            line-height: 1.2;
         }
 
         .time {
             font-size: 10px;
             margin-bottom: 2px;
+            line-height: 1.2;
         }
 
         .names {
             font-size: 10px;
-            line-height: 1.35;
+            line-height: 1.25;
         }
     }
 
@@ -355,14 +340,11 @@
         <div class="week-header">
             <h2>이번주 근무표</h2>
             <div class="button-area">
-                <button class="test-button" onclick="showThisWeek()">이번주 보기</button>
-                <button class="test-button" onclick="showNextWeek()">다음주 테스트</button>
                 <button class="print-button" onclick="window.print()">출력</button>
             </div>
         </div>
 
         <div id="weekTitle" class="date-title"></div>
-        <div id="testNotice" class="test-notice">다음주 테스트 화면입니다. 실제 자동 계산은 현재 날짜 기준으로 작동합니다.</div>
 
         <div class="table-wrap">
             <table id="weekTable"></table>
@@ -393,7 +375,6 @@ const baseGroups = {
 };
 
 let viewDate = new Date();
-let isTestMode = false;
 
 function getWeekStartTuesday(date) {
     const d = new Date(date);
@@ -467,8 +448,6 @@ function formatDate(date) {
 }
 
 function isToday(date) {
-    if (isTestMode) return false;
-
     const today = new Date();
     return date.getFullYear() === today.getFullYear() &&
            date.getMonth() === today.getMonth() &&
@@ -527,7 +506,6 @@ function renderWeek() {
     document.getElementById("weekTitle").innerText =
         `${formatDate(start)} ~ ${formatDate(end)}`;
 
-    document.getElementById("testNotice").style.display = isTestMode ? "block" : "none";
 
     let html = "<tr>";
 
@@ -562,18 +540,6 @@ function renderWeek() {
     document.getElementById("weekTable").innerHTML = html;
 }
 
-function showThisWeek() {
-    viewDate = new Date();
-    isTestMode = false;
-    renderWeek();
-}
-
-function showNextWeek() {
-    viewDate = new Date();
-    viewDate.setDate(viewDate.getDate() + 7);
-    isTestMode = true;
-    renderWeek();
-}
 
 renderWeek();
 </script>
