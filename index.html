@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>전기파트 근무시간표</title>
+
+<style>
+    body {
+        font-family: "맑은 고딕", sans-serif;
+        background: #f4f6f8;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: auto;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+
+    .update {
+        text-align: center;
+        color: #666;
+        margin-bottom: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    th {
+        background: #1976d2;
+        color: white;
+        padding: 12px;
+    }
+
+    td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+    }
+
+    tr:nth-child(even) {
+        background: #f9f9f9;
+    }
+
+    .day {
+        background: #e3f2fd;
+        font-weight: bold;
+    }
+
+    .notice {
+        margin-top: 20px;
+        padding: 15px;
+        background: #fff3cd;
+        border-left: 5px solid #ffc107;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>⚡ 전기파트 근무시간표</h1>
+
+    <div class="update">
+        최종 업데이트 : 2026-06-04 13:00
+    </div>
+
+    <table>
+        <tr>
+            <th>요일</th>
+            <th>주간근무</th>
+            <th>당직자</th>
+            <th>비고</th>
+        </tr>
+
+        <tr>
+            <td class="day">월요일</td>
+            <td>08:00 ~ 17:00</td>
+            <td>김철수</td>
+            <td>-</td>
+        </tr>
+
+        <tr>
+            <td class="day">화요일</td>
+            <td>08:00 ~ 17:00</td>
+            <td>이영희</td>
+            <td>야간대기</td>
+        </tr>
+
+        <tr>
+            <td class="day">수요일</td>
+            <td>08:00 ~ 17:00</td>
+            <td>박민수</td>
+            <td>-</td>
+        </tr>
+
+        <tr>
+            <td class="day">목요일</td>
+            <td>08:00 ~ 17:00</td>
+            <td>정수현</td>
+            <td>-</td>
+        </tr>
+
+        <tr>
+            <td class="day">금요일</td>
+            <td>08:00 ~ 17:00</td>
+            <td>최지훈</td>
+            <td>주말대기</td>
+        </tr>
+    </table>
+
+    <div class="notice">
+        <strong>공지사항</strong><br>
+        설비 긴급 정지 또는 전기 관련 이상 발생 시 당직자에게 즉시 연락 바랍니다.
+    </div>
+
+</div>
+
+</body>
+</html>
