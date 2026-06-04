@@ -97,7 +97,7 @@
         border: 1px solid #ddd;
         padding: 10px;
         text-align: center;
-        vertical-align: top;
+        vertical-align: middle;
         min-width: 110px;
     }
 
@@ -119,11 +119,6 @@
 
     .night-shift {
         background: #ede7f6;
-    }
-
-    .blank {
-        background: #fafafa;
-        color: #aaa;
     }
 
     .today-col {
@@ -173,22 +168,46 @@
         cursor: pointer;
     }
 
-.notice {
-    padding: 12px;
-    margin-top: 15px;
-    border-radius: 6px;
-    line-height: 1.7;
-}
+    .notice {
+        padding: 12px;
+        margin-top: 15px;
+        border-radius: 6px;
+        line-height: 1.7;
+    }
 
-.red-notice {
-    background: #ffebee;
-    border-left: 5px solid #e53935;
-}
+    .red-notice {
+        background: #ffebee;
+        border-left: 5px solid #e53935;
+    }
 
-.yellow-notice {
-    background: #fff3cd;
-    border-left: 5px solid #ffc107;
-}
+    .yellow-notice {
+        background: #fff3cd;
+        border-left: 5px solid #ffc107;
+    }
+
+    .week-day-cell {
+        height: 110px;
+        box-sizing: border-box;
+    }
+
+    .week-holiday-cell {
+        padding: 0;
+        height: 330px;
+        box-sizing: border-box;
+    }
+
+    .holiday-half {
+        height: 50%;
+        padding: 10px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .holiday-half:first-child {
+        border-bottom: 1px solid #ddd;
+    }
 
     @media print {
         header,
@@ -223,6 +242,14 @@
         th, td {
             padding: 6px;
         }
+
+        .week-day-cell {
+            height: 95px;
+        }
+
+        .week-holiday-cell {
+            height: 285px;
+        }
     }
 
     @media (max-width: 768px) {
@@ -239,26 +266,6 @@
             overflow-x: auto;
         }
     }
-
-    .week-holiday-cell {
-    padding: 0;
-    height: 100%;
-}
-
-.holiday-half {
-    min-height: 110px;
-    padding: 10px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.holiday-half:first-child {
-    border-bottom: 1px solid #ddd;
-}
-
-    
 </style>
 </head>
 
@@ -286,16 +293,15 @@
             </div>
 
             <div class="notice red-notice">
-            ※ 해당 사이트는 자동입니다.<br>
-            &nbsp;&nbsp;- 명절 및 휴가기간 근무 편성은 별도로 운영됩니다.<br>
-            &nbsp;&nbsp;- 개인 연차, 경조는 해당 표에 반영되지 않습니다.
+                ※ 해당 사이트는 자동입니다.<br>
+                &nbsp;&nbsp;- 명절 및 휴가기간 근무 편성은 별도로 운영됩니다.<br>
+                &nbsp;&nbsp;- 개인 연차, 경조는 해당 표에 반영되지 않습니다.
             </div>
 
             <div class="notice yellow-notice">
-            ※ 근무조는 매주 화요일 기준으로 자동 변경됩니다.<br>
-            순환 방식 : 1근조 → 3근조 → 2근조 → 1근조
+                ※ 근무조는 매주 화요일 기준으로 자동 변경됩니다.<br>
+                순환 방식 : 1근조 → 3근조 → 2근조 → 1근조
             </div>
-            
         </div>
     </section>
 
@@ -368,82 +374,28 @@ function getHolidayShift(date, shiftType) {
     const day = date.getDay();
     const groups = getGroupsForDate(date);
 
-    // 토요일
     if (day === 6) {
-        if (shiftType === "day") {
-            return {
-                label: "주간",
-                group: "1근조",
-                time: "06:30 ~ 18:30",
-                names: groups[1]
-            };
-        }
-
-        if (shiftType === "night") {
-            return {
-                label: "야간",
-                group: "3근조",
-                time: "18:30 ~ 06:30",
-                names: groups[3]
-            };
-        }
+        if (shiftType === "day") return { label: "주간", time: "06:30 ~ 18:30", names: groups[1] };
+        if (shiftType === "night") return { label: "야간", time: "18:30 ~ 06:30", names: groups[3] };
     }
 
-    // 일요일
     if (day === 0) {
-        if (shiftType === "day") {
-            return {
-                label: "주간",
-                group: "2근조",
-                time: "06:30 ~ 18:30",
-                names: groups[2]
-            };
-        }
-
-        if (shiftType === "night") {
-            return {
-                label: "야간",
-                group: "3근조",
-                time: "18:30 ~ 06:30",
-                names: groups[3]
-            };
-        }
+        if (shiftType === "day") return { label: "주간", time: "06:30 ~ 18:30", names: groups[2] };
+        if (shiftType === "night") return { label: "야간", time: "18:30 ~ 06:30", names: groups[3] };
     }
 
-    // 월요일
     if (day === 1) {
-        if (shiftType === "day") {
-            return {
-                label: "주간",
-                group: "2근조",
-                time: "06:30 ~ 18:30",
-                names: groups[2]
-            };
-        }
-
-        if (shiftType === "night") {
-            return {
-                label: "야간",
-                group: "1근조",
-                time: "18:30 ~ 06:30",
-                names: groups[1]
-            };
-        }
+        if (shiftType === "day") return { label: "주간", time: "06:30 ~ 18:30", names: groups[2] };
+        if (shiftType === "night") return { label: "야간", time: "18:30 ~ 06:30", names: groups[1] };
     }
 
-    return {
-        label: "",
-        group: "",
-        time: "",
-        names: []
-    };
+    return { label: "", time: "", names: [] };
 }
 
 function getWeekdayWorkInfo(groupNumber) {
     if (groupNumber === 1) return { label: "1근조", time: "06:30 ~ 14:30" };
     if (groupNumber === 2) return { label: "2근조", time: "14:30 ~ 22:30" };
     if (groupNumber === 3) return { label: "3근조", time: "22:30 ~ 06:30" };
-
     return { label: "-", time: "-" };
 }
 
@@ -466,10 +418,8 @@ function getTodayClass(date, rowIndex, totalRows) {
     if (!isToday(date)) return "";
 
     let cls = " today-col";
-
     if (rowIndex === 0) cls += " today-top";
     if (rowIndex === totalRows - 1) cls += " today-bottom";
-
     return cls;
 }
 
@@ -479,7 +429,7 @@ function renderWeekdayCell(date, groupNumber, rowIndex, totalRows) {
     const work = getWeekdayWorkInfo(groupNumber);
 
     return `
-        <td class="shift${groupNumber}${getTodayClass(date, rowIndex, totalRows)}">
+        <td class="week-day-cell shift${groupNumber}${getTodayClass(date, rowIndex, totalRows)}">
             <div class="group-title">${work.label}</div>
             <div class="time">${work.time}</div>
             <div class="names">${names.join("<br>")}</div>
@@ -487,27 +437,10 @@ function renderWeekdayCell(date, groupNumber, rowIndex, totalRows) {
     `;
 }
 
-function renderHolidayCell(date, shiftType, rowIndex, totalRows) {
-    const work = getHolidayShift(date, shiftType);
-    const cssClass = shiftType === "day" ? "day-shift" : "night-shift";
-
-    return `
-        <td class="${cssClass}${getTodayClass(date, rowIndex, totalRows)}">
-            <div class="group-title">${work.label}</div>
-            <div class="time">${work.time}</div>
-            <div class="names">${work.names.join("<br>")}</div>
-        </td>
-    `;
-}
-
-/* 여기에 새 함수 추가 */
 function renderHolidayCombinedCell(date, totalRows) {
     const dayWork = getHolidayShift(date, "day");
     const nightWork = getHolidayShift(date, "night");
-
-    const todayClass = isToday(date)
-        ? " today-col today-top today-bottom"
-        : "";
+    const todayClass = isToday(date) ? " today-col today-top today-bottom" : "";
 
     return `
         <td rowspan="${totalRows}" class="week-holiday-cell${todayClass}">
@@ -516,7 +449,6 @@ function renderHolidayCombinedCell(date, totalRows) {
                 <div class="time">${dayWork.time}</div>
                 <div class="names">${dayWork.names.join("<br>")}</div>
             </div>
-
             <div class="holiday-half night-shift">
                 <div class="group-title">${nightWork.label}</div>
                 <div class="time">${nightWork.time}</div>
@@ -525,7 +457,6 @@ function renderHolidayCombinedCell(date, totalRows) {
         </td>
     `;
 }
-    
 
 function renderWeek() {
     const today = new Date();
@@ -556,20 +487,13 @@ function renderWeek() {
             d.setDate(start.getDate() + i);
             const day = d.getDay();
 
-            // 화~금 : 1근조 / 2근조 / 3근조 표시
             if (day >= 2 && day <= 5) {
                 html += renderWeekdayCell(d, row + 1, row, totalRows);
+            } else {
+                if (row === 0) {
+                    html += renderHolidayCombinedCell(d, totalRows);
+                }
             }
-
-            // 토~월 : 주간 / 야간을 한 칸 안에서 50:50으로 표시
-else {
-    if (row === 0) {
-        html += renderHolidayCombinedCell(d, totalRows);
-    } else {
-        // 위에서 rowspan으로 합쳤기 때문에 나머지 행은 만들지 않음
-    }
-}
-            
         }
 
         html += "</tr>";
@@ -587,7 +511,6 @@ function renderMonthDayBlock(date) {
         </tr>
     `;
 
-    // 화~금 : 1근조 / 2근조 / 3근조
     if (day >= 2 && day <= 5) {
         html += `
             <tr>
@@ -596,10 +519,7 @@ function renderMonthDayBlock(date) {
                 ${renderWeekdayCell(date, 3, 0, 1)}
             </tr>
         `;
-    }
-
-    // 토~월 : 주간 / 야간 2행
-    else {
+    } else {
         html += `
             <tr>
                 <td colspan="3" class="day-shift${isToday(date) ? " today-col today-top" : ""}">
@@ -621,7 +541,7 @@ function renderHolidayContent(date, shiftType) {
     const work = getHolidayShift(date, shiftType);
 
     return `
-        <div class="group-title">${work.label} / ${work.group}</div>
+        <div class="group-title">${work.label}</div>
         <div class="time">${work.time}</div>
         <div class="names">${work.names.join("<br>")}</div>
     `;
