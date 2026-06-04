@@ -20,19 +20,14 @@
         text-align: center;
     }
 
+    header h1 {
+        margin: 0;
+    }
 
     .container {
         max-width: 1200px;
         margin: 20px auto;
         padding: 0 15px;
-    }
-
-    .section {
-        display: none;
-    }
-
-    .section.active {
-        display: block;
     }
 
     .card {
@@ -41,11 +36,6 @@
         padding: 20px;
         margin-bottom: 20px;
         box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-    }
-
-    h2 {
-        margin-top: 0;
-        color: #1565c0;
     }
 
     .week-header {
@@ -58,11 +48,18 @@
 
     .week-header h2 {
         margin: 0;
+        color: #1565c0;
     }
 
-    .print-button {
+    .button-area {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    button {
         border: none;
-        background: #1976d2;
         color: white;
         padding: 9px 14px;
         border-radius: 8px;
@@ -71,14 +68,37 @@
         white-space: nowrap;
     }
 
+    .print-button {
+        background: #1976d2;
+    }
+
     .print-button:hover {
         background: #0d47a1;
+    }
+
+    .test-button {
+        background: #455a64;
+    }
+
+    .test-button:hover {
+        background: #263238;
     }
 
     .date-title {
         font-weight: bold;
         margin-bottom: 15px;
         color: #555;
+    }
+
+    .test-notice {
+        display: none;
+        margin-bottom: 12px;
+        padding: 10px 12px;
+        border-radius: 8px;
+        background: #e3f2fd;
+        border-left: 5px solid #1976d2;
+        color: #0d47a1;
+        font-weight: bold;
     }
 
     table {
@@ -153,7 +173,6 @@
         font-size: 14px;
     }
 
-
     .notice {
         padding: 12px;
         margin-top: 15px;
@@ -197,7 +216,7 @@
 
     @page {
         size: A4 landscape;
-        margin: 8mm;
+        margin: 14mm 8mm 8mm 8mm;
     }
 
     @media print {
@@ -228,8 +247,10 @@
             margin: 0;
         }
 
-        .print-button,
-        .notice {
+        header,
+        .button-area,
+        .notice,
+        .test-notice {
             display: none !important;
         }
 
@@ -260,25 +281,25 @@
         }
 
         th {
-            padding: 4px 2px;
-            font-size: 10.5px;
+            padding: 5px 3px;
+            font-size: 10px;
         }
 
         td {
-            padding: 4px 2px;
+            padding: 5px 3px;
             min-width: 0;
         }
 
         .week-day-cell {
-            height: 66px;
+            height: 82px;
         }
 
         .week-holiday-cell {
-            height: 198px;
+            height: 246px;
         }
 
         .holiday-half {
-            padding: 4px 2px;
+            padding: 5px 3px;
         }
 
         .group-title {
@@ -287,17 +308,26 @@
         }
 
         .time {
-            font-size: 10.5px;
-            margin-bottom: 3px;
+            font-size: 10px;
+            margin-bottom: 2px;
         }
 
         .names {
-            font-size: 11px;
+            font-size: 10px;
             line-height: 1.35;
         }
     }
 
     @media (max-width: 768px) {
+        .week-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .button-area {
+            justify-content: flex-start;
+        }
+
         table {
             font-size: 13px;
         }
@@ -320,34 +350,35 @@
     <h1>⚡ 전기파트 근무표</h1>
 </header>
 
-
 <div class="container">
-
-    <section id="week" class="section active">
-        <div class="card print-area">
-            <div class="week-header">
-                <h2>이번주 근무표</h2>
+    <div class="card print-area">
+        <div class="week-header">
+            <h2>이번주 근무표</h2>
+            <div class="button-area">
+                <button class="test-button" onclick="showThisWeek()">이번주 보기</button>
+                <button class="test-button" onclick="showNextWeek()">다음주 테스트</button>
                 <button class="print-button" onclick="window.print()">출력</button>
             </div>
-            <div id="weekTitle" class="date-title"></div>
-            <div class="table-wrap">
-                <table id="weekTable"></table>
-            </div>
-
-            <div class="notice red-notice">
-                ※ 해당 사이트는 자동입니다.<br>
-                &nbsp;&nbsp;- 명절 및 휴가기간 근무 편성은 별도로 운영됩니다.<br>
-                &nbsp;&nbsp;- 개인 연차, 경조는 해당 표에 반영되지 않습니다.
-            </div>
-
-            <div class="notice yellow-notice">
-                ※ 근무조는 매주 화요일 기준으로 자동 변경됩니다.<br>
-                순환 방식 : 1근조 → 3근조 → 2근조 → 1근조
-            </div>
         </div>
-    </section>
 
+        <div id="weekTitle" class="date-title"></div>
+        <div id="testNotice" class="test-notice">다음주 테스트 화면입니다. 실제 자동 계산은 현재 날짜 기준으로 작동합니다.</div>
 
+        <div class="table-wrap">
+            <table id="weekTable"></table>
+        </div>
+
+        <div class="notice red-notice">
+            ※ 해당 사이트는 자동입니다.<br>
+            &nbsp;&nbsp;- 명절 및 휴가기간 근무 편성은 별도로 운영됩니다.<br>
+            &nbsp;&nbsp;- 개인 연차, 경조는 해당 표에 반영되지 않습니다.
+        </div>
+
+        <div class="notice yellow-notice">
+            ※ 근무조는 매주 화요일 기준으로 자동 변경됩니다.<br>
+            순환 방식 : 1근조 → 3근조 → 2근조 → 1근조
+        </div>
+    </div>
 </div>
 
 <script>
@@ -361,7 +392,8 @@ const baseGroups = {
     3: ["노재덕", "박종필", "이경민"]
 };
 
-let currentMonthDate = new Date();
+let viewDate = new Date();
+let isTestMode = false;
 
 function getWeekStartTuesday(date) {
     const d = new Date(date);
@@ -435,6 +467,8 @@ function formatDate(date) {
 }
 
 function isToday(date) {
+    if (isTestMode) return false;
+
     const today = new Date();
     return date.getFullYear() === today.getFullYear() &&
            date.getMonth() === today.getMonth() &&
@@ -486,13 +520,14 @@ function renderHolidayCombinedCell(date, totalRows) {
 }
 
 function renderWeek() {
-    const today = new Date();
-    const start = getWeekStartTuesday(today);
+    const start = getWeekStartTuesday(viewDate);
     const end = new Date(start);
     end.setDate(start.getDate() + 6);
 
     document.getElementById("weekTitle").innerText =
         `${formatDate(start)} ~ ${formatDate(end)}`;
+
+    document.getElementById("testNotice").style.display = isTestMode ? "block" : "none";
 
     let html = "<tr>";
 
@@ -516,10 +551,8 @@ function renderWeek() {
 
             if (day >= 2 && day <= 5) {
                 html += renderWeekdayCell(d, row + 1, row, totalRows);
-            } else {
-                if (row === 0) {
-                    html += renderHolidayCombinedCell(d, totalRows);
-                }
+            } else if (row === 0) {
+                html += renderHolidayCombinedCell(d, totalRows);
             }
         }
 
@@ -529,85 +562,17 @@ function renderWeek() {
     document.getElementById("weekTable").innerHTML = html;
 }
 
-function renderMonthDayBlock(date) {
-    const day = date.getDay();
-
-    let html = `
-        <tr>
-            <th colspan="3">${formatDate(date)}</th>
-        </tr>
-    `;
-
-    if (day >= 2 && day <= 5) {
-        html += `
-            <tr>
-                ${renderWeekdayCell(date, 1, 0, 1)}
-                ${renderWeekdayCell(date, 2, 0, 1)}
-                ${renderWeekdayCell(date, 3, 0, 1)}
-            </tr>
-        `;
-    } else {
-        html += `
-            <tr>
-                <td colspan="3" class="day-shift${isToday(date) ? " today-col today-top" : ""}">
-                    ${renderHolidayContent(date, "day")}
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3" class="night-shift${isToday(date) ? " today-col today-bottom" : ""}">
-                    ${renderHolidayContent(date, "night")}
-                </td>
-            </tr>
-        `;
-    }
-
-    return html;
+function showThisWeek() {
+    viewDate = new Date();
+    isTestMode = false;
+    renderWeek();
 }
 
-function renderHolidayContent(date, shiftType) {
-    const work = getHolidayShift(date, shiftType);
-
-    return `
-        <div class="group-title">${work.label}</div>
-        <div class="time">${work.time}</div>
-        <div class="names">${work.names.join("<br>")}</div>
-    `;
-}
-
-function renderMonth() {
-    const year = currentMonthDate.getFullYear();
-    const month = currentMonthDate.getMonth();
-
-    document.getElementById("monthTitle").innerText =
-        `${year}년 ${month + 1}월`;
-
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-
-    let html = "";
-
-    for (let d = new Date(firstDay); d <= lastDay; d.setDate(d.getDate() + 1)) {
-        const date = new Date(d);
-        html += renderMonthDayBlock(date);
-    }
-
-    document.getElementById("monthTable").innerHTML = html;
-}
-
-function changeMonth(offset) {
-    currentMonthDate.setMonth(currentMonthDate.getMonth() + offset);
-    renderMonth();
-}
-
-function showSection(id) {
-    document.querySelectorAll(".section").forEach(sec => {
-        sec.classList.remove("active");
-    });
-
-    document.getElementById(id).classList.add("active");
-
-    if (id === "week") renderWeek();
-    if (id === "month") renderMonth();
+function showNextWeek() {
+    viewDate = new Date();
+    viewDate.setDate(viewDate.getDate() + 7);
+    isTestMode = true;
+    renderWeek();
 }
 
 renderWeek();
